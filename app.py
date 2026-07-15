@@ -1020,11 +1020,8 @@ for col in df_display.columns:
     else:
         df_display[col] = df_display[col].apply(lambda x: f"{x:.6f}" if not pd.isna(x) else "NaN")
 
-if has_exact and Y_true is not None and not has_diverged:
-    styled_df = df_display.style.background_gradient(subset=['Sai số tuyệt đối AB4'], cmap='RdYlGn_r', low=0.1, high=0.9).background_gradient(subset=['Sai số tương đối AB4 (%)'], cmap='RdYlBu_r', low=0.1, high=0.9)
-else:
-    styled_df = df_display
-
+# ===== HIỂN THỊ BẢNG DỮ LIỆU (bỏ background_gradient để tránh lỗi matplotlib) =====
+styled_df = df_display
 st.dataframe(styled_df, use_container_width=True, height=400)
 
 # --- XUẤT DỮ LIỆU ---
