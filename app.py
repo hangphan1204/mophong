@@ -180,23 +180,13 @@ st.markdown("""
     }
     
     .tooltip-hint {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 215, 0, 0.5);
         border-radius: 8px;
         padding: 0.5rem 1rem;
         margin: 0.5rem 0;
         font-size: 0.9rem;
-        color: #495057;
-        border-left: 3px solid #667eea;
-    }
-    
-    .download-hint {
-        background: #e7f3ff;
-        border: 1px solid #b8d4f0;
-        border-radius: 8px;
-        padding: 0.8rem 1.2rem;
-        margin: 0.5rem 0;
-        color: #004085;
+        color: #FFFFFF;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -339,7 +329,7 @@ st.sidebar.markdown("""
 
 # HƯỚNG DẪN NHẬP THAM SỐ
 st.sidebar.markdown("""
-<div class="tooltip-hint" style="background: rgba(255,255,255,0.1); border-color: rgba(255,215,0,0.5); color: #FFFFFF;">
+<div class="tooltip-hint">
     💡 <b>Hướng dẫn thay đổi tham số:</b><br>
     • Nhập giá trị mới vào ô tương ứng<br>
     • Nhấn <kbd>Enter</kbd> để cập nhật ngay<br>
@@ -777,13 +767,6 @@ with col_chart2:
         index=0,
         key="main_chart_type"
     )
-    
-    # Thêm hướng dẫn tải ảnh
-    st.markdown("""
-    <div style="background: #e7f3ff; padding: 0.5rem; border-radius: 6px; margin-top: 0.5rem; font-size: 0.8rem; border: 1px solid #b8d4f0;">
-        📷 <b>Tải ảnh:</b> Click vào biểu tượng 📷 trên thanh công cụ
-    </div>
-    """, unsafe_allow_html=True)
 
 with col_chart1:
     fig = go.Figure()
@@ -808,24 +791,6 @@ with col_chart1:
         plot_bgcolor='rgba(255,255,255,0.8)', paper_bgcolor='rgba(255,255,255,0.9)'
     )
     st.plotly_chart(fig, use_container_width=True, key="static_chart_main")
-    
-    # Hướng dẫn tải ảnh chi tiết cho biểu đồ chính
-    with st.expander("📷 Hướng dẫn tải ảnh biểu đồ này"):
-        st.markdown("""
-        **Các cách tải ảnh biểu đồ:**
-        
-        1. **Click chuột phải** vào biểu đồ → Chọn:
-           - `Download image as PNG` (định dạng ảnh nén)
-           - `Download image as SVG` (định dạng vector, chất lượng cao)
-        
-        2. **Sử dụng thanh công cụ** phía trên bên phải biểu đồ:
-           - Click vào biểu tượng **máy ảnh** 📷
-           - Chọn định dạng mong muốn
-        
-        3. **Phím tắt:** Nhấn `Ctrl+S` hoặc `Cmd+S` khi đang focus vào biểu đồ
-        
-        💡 **Mẹo:** Định dạng SVG cho chất lượng tốt nhất khi in ấn hoặc phóng to
-        """)
 
 # --- SO SÁNH HIỆU NĂNG ---
 st.markdown("""
@@ -947,9 +912,6 @@ if has_exact and Y_true is not None and not has_diverged:
     </div>
     """, unsafe_allow_html=True)
     
-    # Thêm hướng dẫn tải ảnh cho biểu đồ sai số
-    st.info("💡 **Hướng dẫn tải ảnh sai số:** Click chuột phải vào biểu đồ → Chọn 'Download image as PNG' hoặc 'Download image as SVG'")
-    
     error_chart_type = st.radio(
         "Loại biểu đồ:",
         ["Tuyến tính", "Semi-log y", "Semi-log x", "Log-log"],
@@ -978,24 +940,6 @@ if has_exact and Y_true is not None and not has_diverged:
     fig2.update_yaxes(title_text="Sai số %", type=type_err_y, showgrid=True, gridcolor='lightgray', row=2, col=1)
     fig2.update_layout(height=550, showlegend=True, template='plotly_white', plot_bgcolor='rgba(255,255,255,0.8)', paper_bgcolor='rgba(255,255,255,0.9)')
     st.plotly_chart(fig2, use_container_width=True, key="error_chart")
-    
-    # Hướng dẫn tải ảnh cho biểu đồ sai số
-    with st.expander("📷 Hướng dẫn tải ảnh biểu đồ sai số"):
-        st.markdown("""
-        **Các cách tải ảnh biểu đồ sai số:**
-        
-        1. **Click chuột phải** vào biểu đồ → Chọn:
-           - `Download image as PNG` 
-           - `Download image as SVG` (khuyến nghị cho chất lượng cao)
-        
-        2. **Sử dụng thanh công cụ** phía trên bên phải biểu đồ:
-           - Click vào biểu tượng **máy ảnh** 📷
-           - Chọn định dạng mong muốn
-        
-        3. **Phím tắt:** Nhấn `Ctrl+S` hoặc `Cmd+S` khi đang focus vào biểu đồ
-        
-        💡 **Lưu ý:** Định dạng SVG là lựa chọn tốt nhất cho báo cáo khoa học và in ấn
-        """)
 
 # --- MA TRẬN KẾT QUẢ ---
 st.markdown("""
@@ -1020,10 +964,19 @@ for col in df_display.columns:
     else:
         df_display[col] = df_display[col].apply(lambda x: f"{x:.6f}" if not pd.isna(x) else "NaN")
 
-if has_exact and Y_true is not None and not has_diverged:
-    styled_df = df_display.style.background_gradient(subset=['Sai số tuyệt đối AB4'], cmap='RdYlGn_r', low=0.1, high=0.9).background_gradient(subset=['Sai số tương đối AB4 (%)'], cmap='RdYlBu_r', low=0.1, high=0.9)
-else:
-    styled_df = df_display
+# ===== FIX LỖI MATPLOTLIB =====
+# Thay vì dùng background_gradient (cần matplotlib), 
+# tôi chuyển sang style đơn giản hơn
+styled_df = df_display
+
+# Nếu có matplotlib, vẫn có thể dùng gradient
+try:
+    import matplotlib
+    if has_exact and Y_true is not None and not has_diverged:
+        styled_df = df_display.style.background_gradient(subset=['Sai số tuyệt đối AB4'], cmap='RdYlGn_r', low=0.1, high=0.9).background_gradient(subset=['Sai số tương đối AB4 (%)'], cmap='RdYlBu_r', low=0.1, high=0.9)
+except:
+    # Nếu không có matplotlib, giữ nguyên styled_df không màu
+    pass
 
 st.dataframe(styled_df, use_container_width=True, height=400)
 
