@@ -1037,13 +1037,6 @@ with col_dl1:
     csv = df_matrix.to_csv(index=False, float_format='%.12f').encode('utf-8-sig')
     st.download_button(label="📥 Tải CSV", data=csv, file_name=f"nghiem_AB_{N_use}_{Tmax_use}.csv", mime="text/csv", use_container_width=True)
 
-with col_dl2:
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        df_matrix.to_excel(writer, sheet_name='Nghiem so', float_format='%.12f')
-    excel_data = output.getvalue()
-    st.download_button(label="📊 Tải Excel", data=excel_data, file_name=f"nghiem_AB_{N_use}_{Tmax_use}.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
-
 with col_dl3:
     def format_error(val):
         if np.isnan(val) or np.isinf(val): return 'N/A'
